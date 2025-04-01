@@ -12,3 +12,5 @@ App runs on port 80 and supports the following endpoints:
 Of the many things I didn't get to, these are a few:
 - Adding more correct json vaildation on all the models
 - Better connecting pydantic and the ORM I choose for this session (Tortoise ORM)
+- Not hardcoding db credentials
+- etc.
