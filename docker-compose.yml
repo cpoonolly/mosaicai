@@ -5,6 +5,10 @@ services:
     build: ./api
     ports:
       - 80:80
+    depends_on:
+      - db
+    networks:
+      - db
 
   db:
     image: postgres
@@ -15,7 +19,7 @@ services:
     volumes:
       - db:/data/postgres
     ports:
-      - "5332:5432"
+      - "5432:5432"
     networks:
       - db
 
