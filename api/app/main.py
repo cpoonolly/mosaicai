@@ -1,9 +1,9 @@
 from contextlib import asynccontextmanager
+from datetime import datetime
 
-from typing import Union
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 
-from tortoise import Tortoise, run_async
+from tortoise import Tortoise
 
 from .models import Book
 from .schemas import BookSchema
@@ -49,8 +49,27 @@ async def create_book(bookSchema: BookSchema):
     )
 
 @app.get("/book/")
-async def get_books():
-    books = await Book.all()
+async def get_books(
+    price_gt: float = Query(default=None),
+    price_lt: float = Query(default=None),
+    publication_time_gt: datetime = Query(default=None),
+    publication_time_lt: datetime = Query(default=None),
+    isbn=Query(default=None),
+):
+    filters = {}
+    if price_gt:
+        filters["price__gt"] = price_gt
+    if price_lt:
+        filters["price__lt"] = price_lt
+    if publication_time_gt:
+        filters["publication_time__gt"] = publication_time_gt
+    if publication_time_lt:
+        filters["publication_time__lt"] = publication_time_lt
+    if isbn:
+        filters["ISBN"] = isbn
+
+    books = await Book.filter(**filters).all()
+
 
     return [
         BookSchema(
